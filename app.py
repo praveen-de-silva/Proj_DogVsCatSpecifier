@@ -52,9 +52,20 @@ st.markdown("""
 # ------------------------------
 # Upload Section
 # ------------------------------
-uploaded_file = st.file_uploader("", type=["jpg", "jpeg", "png"], label_visibility="collapsed")
+if 'uploaded_file' not in st.session_state:
+    st.session_state.uploaded_file = None
 
-if uploaded_file is not None and not st.session_state.show_prediction:
+uploaded_file = st.file_uploader("", type=["jpg", "jpeg", "png"], label_visibility="collapsed", key="file_uploader")
+
+# Store uploaded file in session state
+if uploaded_file is not None:
+    st.session_state.uploaded_file = uploaded_file
+
+# Hide the file uploader after upload
+if st.session_state.uploaded_file is not None:
+    st.markdown('<style>div[data-testid="stFileUploader"] {display: none;}</style>', unsafe_allow_html=True)
+
+if st.session_state.uploaded_file is not None and not st.session_state.show_prediction:
     # Display the uploaded image
     img = Image.open(uploaded_file).convert('RGB')
     
