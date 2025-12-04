@@ -63,6 +63,7 @@ if st.session_state.uploaded_file is None:
         st.session_state.uploaded_file = uploaded_file
         st.rerun()
 
+# Show image and buttons after upload
 if st.session_state.uploaded_file is not None and not st.session_state.show_prediction:
     # Display the uploaded image
     img = Image.open(st.session_state.uploaded_file).convert('RGB')
@@ -90,6 +91,7 @@ if st.session_state.uploaded_file is not None and not st.session_state.show_pred
                 del st.session_state[key]
             st.rerun()
 
+# Show prediction results
 elif st.session_state.uploaded_file is not None and st.session_state.show_prediction:
     # Display the uploaded image
     img = Image.open(st.session_state.uploaded_file).convert('RGB')
@@ -143,7 +145,9 @@ elif st.session_state.uploaded_file is not None and st.session_state.show_predic
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
             st.rerun()
-else:
+
+# Show upload placeholder when no file
+elif st.session_state.uploaded_file is None:
     st.markdown("""
     <div class="upload-placeholder">
         <p class="upload-text">📁 Drag and drop or click to upload</p>
