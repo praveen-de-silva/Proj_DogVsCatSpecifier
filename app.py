@@ -40,6 +40,10 @@ if 'show_prediction' not in st.session_state:
     st.session_state.show_prediction = False
 if 'uploaded_file' not in st.session_state:
     st.session_state.uploaded_file = None
+if 'show_error' not in st.session_state:
+    st.session_state.show_error = False
+if 'error_message' not in st.session_state:
+    st.session_state.error_message = ""
 
 # ------------------------------
 # Header Section
@@ -60,91 +64,113 @@ if st.session_state.uploaded_file is None:
     
     # Store uploaded file in session state
     if uploaded_file is not None:
-        st.session_state.uploaded_file = uploaded_file
-        st.rerun()
+        try:
+            # Validate the uploaded file
+            test_img = Image.open(uploaded_file)
+            test_img.verify()  # Verify it's a valid image
+            uploaded_file.seek(0)  # Reset file pointer
+            st.session_state.uploaded_file = uploaded_file
+            st.session_state.show_error = False
+            st.rerun()
+        except Exception as e:
+            st.session_state.show_error = True
+            st.session_state.error_message = "Invalid image file. Please upload a valid JPG, JPEG, or PNG image."
 
 # Show image and buttons after upload
 if st.session_state.uploaded_file is not None and not st.session_state.show_prediction:
-    # Display the uploaded image
-    img = Image.open(st.session_state.uploaded_file).convert('RGB')
-    
-    # Resize image to fixed size maintaining aspect ratio
-    img.thumbnail((350, 350), Image.Resampling.LANCZOS)
-    
-    # Display in fixed size container
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        st.markdown('<div class="image-container-fixed">', unsafe_allow_html=True)
-        st.image(img, width=350)
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Action buttons
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("✓ Predict", use_container_width=True, type="primary"):
-            st.session_state.show_prediction = True
-            st.rerun()
-    with col2:
-        if st.button("✕ Cancel", use_container_width=True):
-            # Clear session state
-            for key in list(st.session_state.keys()):
-                del st.session_state[key]
-            st.rerun()
+    try:
+        # Display the uploaded image
+        img = Image.open(st.session_state.uploaded_file).convert('RGB')
+        
+        # Resize image to fixed size maintaining aspect ratio
+        img.thumbnail((350, 350), Image.Resampling.LANCZOS)
+        
+        # Display in fixed size container
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            st.markdown('<div class="image-container-fixed">', unsafe_allow_html=True)
+            st.image(img, width=350)
+            st.markdown('</div>', unsafe_allow_html=True)
+        
+        # Action buttons
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button("✓ Predict", use_container_width=True, type="primary"):
+                st.session_state.show_prediction = True
+                st.rerun()
+        with col2:
+            if st.button("✕ Cancel", use_container_width=True):
+                # Clear session state
+                for key in list(st.session_state.keys()):
+                    del st.session_state[key]
+                st.rerun()
+    except Exception as e:
+        st.session_state.show_error = True
+        st.session_state.error_message = f"Error processing image: {str(e)}"
+        st.session_state.uploaded_file = None
+        st.rerun()
 
 # Show prediction results
 elif st.session_state.uploaded_file is not None and st.session_state.show_prediction:
-    # Display the uploaded image
-    img = Image.open(st.session_state.uploaded_file).convert('RGB')
-    
-    # Resize image to fixed size maintaining aspect ratio
-    img.thumbnail((350, 350), Image.Resampling.LANCZOS)
-    
-    # Display in fixed size container
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        st.markdown('<div class="image-container-fixed">', unsafe_allow_html=True)
-        st.image(img, width=350)
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Preprocess image
-    img_resized = img.resize((128, 128))
-    x = image.img_to_array(img_resized) / 255.0
-    x = np.expand_dims(x, axis=0)
-    
-    # Prediction
-    pred = model.predict(x, verbose=0)
-    confidence = float(pred[0][0])
-    
-    if confidence > 0.5:
-        label = "Dog"
-        icon = "🐕"
-        confidence_percent = confidence * 100
-    else:
-        label = "Cat"
-        icon = "🐈"
-        confidence_percent = (1 - confidence) * 100
-    
-    # Display result
-    st.markdown(f"""
-    <div class="result-card">
-        <div class="result-icon">{icon}</div>
-        <p class="result-label">Classification Result</p>
-        <h2 class="result-value">{label}</h2>
-        <p class="confidence-text">Confidence: {confidence_percent:.1f}%</p>
-        <div class="confidence-bar">
-            <div class="confidence-fill" style="width: {confidence_percent}%;"></div>
+    try:
+        # Display the uploaded image
+        img = Image.open(st.session_state.uploaded_file).convert('RGB')
+        
+        # Resize image to fixed size maintaining aspect ratio
+        img.thumbnail((350, 350), Image.Resampling.LANCZOS)
+        
+        # Display in fixed size container
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            st.markdown('<div class="image-container-fixed">', unsafe_allow_html=True)
+            st.image(img, width=350)
+            st.markdown('</div>', unsafe_allow_html=True)
+        
+        # Preprocess image
+        img_resized = img.resize((128, 128))
+        x = image.img_to_array(img_resized) / 255.0
+        x = np.expand_dims(x, axis=0)
+        
+        # Prediction
+        pred = model.predict(x, verbose=0)
+        confidence = float(pred[0][0])
+        
+        if confidence > 0.5:
+            label = "Dog"
+            icon = "🐕"
+            confidence_percent = confidence * 100
+        else:
+            label = "Cat"
+            icon = "🐈"
+            confidence_percent = (1 - confidence) * 100
+        
+        # Display result
+        st.markdown(f"""
+        <div class="result-card">
+            <div class="result-icon">{icon}</div>
+            <p class="result-label">Classification Result</p>
+            <h2 class="result-value">{label}</h2>
+            <p class="confidence-text">Confidence: {confidence_percent:.1f}%</p>
+            <div class="confidence-bar">
+                <div class="confidence-fill" style="width: {confidence_percent}%;"></div>
+            </div>
         </div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # New prediction button
-    col1, col2, col3 = st.columns([1, 1, 1])
-    with col2:
-        if st.button("↻ New Prediction", use_container_width=True):
-            # Clear all session state
-            for key in list(st.session_state.keys()):
-                del st.session_state[key]
-            st.rerun()
+        """, unsafe_allow_html=True)
+        
+        # New prediction button
+        col1, col2, col3 = st.columns([1, 1, 1])
+        with col2:
+            if st.button("↻ New Prediction", use_container_width=True):
+                # Clear all session state
+                for key in list(st.session_state.keys()):
+                    del st.session_state[key]
+                st.rerun()
+    except Exception as e:
+        st.session_state.show_error = True
+        st.session_state.error_message = f"Error during prediction: {str(e)}"
+        st.session_state.uploaded_file = None
+        st.session_state.show_prediction = False
+        st.rerun()
 
 # Show upload placeholder when no file
 elif st.session_state.uploaded_file is None:
@@ -156,10 +182,32 @@ elif st.session_state.uploaded_file is None:
     """, unsafe_allow_html=True)
 
 # ------------------------------
+# Error Modal/Popup
+# ------------------------------
+if st.session_state.show_error:
+    st.markdown("""
+    <div class="error-overlay">
+        <div class="error-modal">
+            <div class="error-icon">⚠️</div>
+            <h3 class="error-title">Error</h3>
+            <p class="error-message">{}</p>
+        </div>
+    </div>
+    """.format(st.session_state.error_message), unsafe_allow_html=True)
+    
+    col1, col2, col3 = st.columns([1, 1, 1])
+    with col2:
+        if st.button("↻ Try Again", use_container_width=True, type="primary", key="try_again"):
+            # Clear error state
+            st.session_state.show_error = False
+            st.session_state.error_message = ""
+            st.rerun()
+
+# ------------------------------
 # Footer Section
 # ------------------------------
 st.markdown("""
 <div class="footer">
-    <p class="footer-text">Praveen De Silva | Machine Learning Project 01 | December 2024</p>
+    <p class="footer-text">Praveen De Silva | Machine Learning Project 01 | December 2025</p>
 </div>
 """, unsafe_allow_html=True)

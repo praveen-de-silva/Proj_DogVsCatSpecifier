@@ -1,6 +1,16 @@
 /* Main background */
 .stApp {
     background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    position: relative;
+    min-height: 100vh;
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-origin: padding-box;
 }
 
 /* Header styling */
@@ -55,7 +65,7 @@
 }
 
 /* Image display - Fixed size container */
-.image-container-fixed {
+/* .image-container-fixed {
     background: rgba(255, 255, 255, 0.05);
     border-radius: 15px;
     padding: 1rem;
@@ -65,7 +75,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-}
+} */
 
 .image-container-fixed img {
     border-radius: 10px;
@@ -136,6 +146,15 @@ header {visibility: hidden;}
     border: none !important;
 }
 
+.stFileUploader > div > div {
+    display: none !important;
+}
+
+/* Hide the upload section element */
+section[data-testid="stFileUploadDropzone"] {
+    display: none !important;
+}
+
 /* Button styling */
 .stButton > button {
     background: linear-gradient(135deg, #ffffff 0%, #d0d0d0 100%);
@@ -160,7 +179,7 @@ header {visibility: hidden;}
 /* Reduce overall spacing */
 .block-container {
     padding-top: 2rem;
-    padding-bottom: 2rem;
+    padding-bottom: 0;
 }
 
 div[data-testid="stVerticalBlock"] > div {
@@ -176,10 +195,66 @@ div[data-testid="stVerticalBlock"] > div {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+
 .footer-text {
     color: #808080;
     font-size: 0.9rem;
     font-weight: 300;
     margin: 0;
     letter-spacing: 0.5px;
+}
+
+/* Error Modal/Popup styling */
+.error-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.error-modal {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%);
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    border: 1px solid rgba(255, 100, 100, 0.3);
+    box-shadow: 0 10px 40px rgba(255, 0, 0, 0.2);
+    max-width: 400px;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.error-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.error-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #ff6b6b;
+    margin: 0.5rem 0;
+}
+
+.error-message {
+    font-size: 1rem;
+    color: #d0d0d0;
+    margin: 1rem 0 1.5rem 0;
+    line-height: 1.5;
 }
