@@ -54,9 +54,6 @@ st.markdown("""
 # ------------------------------
 # Upload Section
 # ------------------------------
-if 'uploaded_file' not in st.session_state:
-    st.session_state.uploaded_file = None
-
 uploaded_file = st.file_uploader("", type=["jpg", "jpeg", "png"], label_visibility="collapsed", key="file_uploader")
 
 # Store uploaded file in session state
@@ -71,9 +68,15 @@ if st.session_state.uploaded_file is not None and not st.session_state.show_pred
     # Display the uploaded image
     img = Image.open(st.session_state.uploaded_file).convert('RGB')
     
-    st.markdown('<div class="image-container-fixed">', unsafe_allow_html=True)
-    st.image(img, use_container_width=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    # Resize image to fixed size maintaining aspect ratio
+    img.thumbnail((350, 350), Image.Resampling.LANCZOS)
+    
+    # Display in fixed size container
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        st.markdown('<div class="image-container-fixed">', unsafe_allow_html=True)
+        st.image(img, width=350)
+        st.markdown('</div>', unsafe_allow_html=True)
     
     # Action buttons
     col1, col2 = st.columns(2)
@@ -85,15 +88,19 @@ if st.session_state.uploaded_file is not None and not st.session_state.show_pred
         if st.button("✕ Cancel", use_container_width=True):
             st.session_state.show_prediction = False
             st.session_state.uploaded_file = None
+            st.cache_resource.clear()
             st.rerun()
 
 elif st.session_state.uploaded_file is not None and st.session_state.show_prediction:
     # Display the uploaded image
     img = Image.open(st.session_state.uploaded_file).convert('RGB')
     
-    st.markdown('<div class="image-container-fixed">', unsafe_allow_html=True)
-    st.image(img, use_container_width=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    # Display in fixed size container
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        st.markdown('<div class="image-container-fixed">', unsafe_allow_html=True)
+        st.image(img, use_column_width=True)
+        st.markdown('</div>', unsafe_allow_html=True)
     
     # Preprocess image
     img_resized = img.resize((128, 128))
@@ -132,6 +139,7 @@ elif st.session_state.uploaded_file is not None and st.session_state.show_predic
         if st.button("↻ New Prediction", use_container_width=True):
             st.session_state.show_prediction = False
             st.session_state.uploaded_file = None
+            st.cache_resource.clear()
             st.rerun()
 else:
     st.markdown("""
@@ -140,3 +148,12 @@ else:
         <p class="upload-subtext">Supports JPG, JPEG, PNG</p>
     </div>
     """, unsafe_allow_html=True)
+
+# ------------------------------
+# Footer Section
+# ------------------------------
+st.markdown("""
+<div class="footer">
+    <p class="footer-text">Praveen De Silva | Machine Learning Project 01 | December 2024</p>
+</div>
+""", unsafe_allow_html=True)
