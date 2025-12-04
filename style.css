@@ -59,18 +59,20 @@
     background: rgba(255, 255, 255, 0.05);
     border-radius: 15px;
     padding: 1rem;
-    margin: 1rem 0;
+    margin: 1rem auto;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    max-width: 400px;
-    margin-left: auto;
-    margin-right: auto;
-    overflow: hidden;
+    width: 100%;
+    max-width: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .image-container-fixed img {
     width: 100%;
-    height: 300px;
-    object-fit: cover;
+    height: auto;
+    max-height: 350px;
+    object-fit: contain;
     border-radius: 10px;
 }
 
@@ -167,4 +169,20 @@ header {visibility: hidden;}
 
 div[data-testid="stVerticalBlock"] > div {
     gap: 0.5rem;
+}
+
+/* Footer styling */
+.footer {
+    margin-top: 3rem;
+    padding: 1.5rem 0;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-text {
+    color: #808080;
+    font-size: 0.9rem;
+    font-weight: 300;
+    margin: 0;
+    letter-spacing: 0.5px;
 }
