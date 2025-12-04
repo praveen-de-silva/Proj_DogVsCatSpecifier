@@ -54,15 +54,14 @@ st.markdown("""
 # ------------------------------
 # Upload Section
 # ------------------------------
-uploaded_file = st.file_uploader("", type=["jpg", "jpeg", "png"], label_visibility="collapsed", key="file_uploader")
-
-# Store uploaded file in session state
-if uploaded_file is not None:
-    st.session_state.uploaded_file = uploaded_file
-
-# Hide the file uploader after upload
-if st.session_state.uploaded_file is not None:
-    st.markdown('<style>div[data-testid="stFileUploader"] {display: none;}</style>', unsafe_allow_html=True)
+# Only show file uploader if no file is uploaded
+if st.session_state.uploaded_file is None:
+    uploaded_file = st.file_uploader("", type=["jpg", "jpeg", "png"], label_visibility="collapsed", key="file_uploader")
+    
+    # Store uploaded file in session state
+    if uploaded_file is not None:
+        st.session_state.uploaded_file = uploaded_file
+        st.rerun()
 
 if st.session_state.uploaded_file is not None and not st.session_state.show_prediction:
     # Display the uploaded image
@@ -86,20 +85,23 @@ if st.session_state.uploaded_file is not None and not st.session_state.show_pred
             st.rerun()
     with col2:
         if st.button("✕ Cancel", use_container_width=True):
-            st.session_state.show_prediction = False
-            st.session_state.uploaded_file = None
-            st.cache_resource.clear()
+            # Clear session state
+            for key in list(st.session_state.keys()):
+                del st.session_state[key]
             st.rerun()
 
 elif st.session_state.uploaded_file is not None and st.session_state.show_prediction:
     # Display the uploaded image
     img = Image.open(st.session_state.uploaded_file).convert('RGB')
     
+    # Resize image to fixed size maintaining aspect ratio
+    img.thumbnail((350, 350), Image.Resampling.LANCZOS)
+    
     # Display in fixed size container
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         st.markdown('<div class="image-container-fixed">', unsafe_allow_html=True)
-        st.image(img, use_column_width=True)
+        st.image(img, width=350)
         st.markdown('</div>', unsafe_allow_html=True)
     
     # Preprocess image
@@ -137,9 +139,9 @@ elif st.session_state.uploaded_file is not None and st.session_state.show_predic
     col1, col2, col3 = st.columns([1, 1, 1])
     with col2:
         if st.button("↻ New Prediction", use_container_width=True):
-            st.session_state.show_prediction = False
-            st.session_state.uploaded_file = None
-            st.cache_resource.clear()
+            # Clear all session state
+            for key in list(st.session_state.keys()):
+                del st.session_state[key]
             st.rerun()
 else:
     st.markdown("""
