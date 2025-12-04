@@ -1,165 +1,184 @@
-import streamlit as st
-from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing import image
-import numpy as np
-from PIL import Image
-import os
+/* Main background */
+.stApp {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+}
 
-# ------------------------------
-# Page Configuration
-# ------------------------------
-st.set_page_config(
-    page_title="Cat/Dog Classifier",
-    page_icon="🐾",
-    layout="centered"
-)
+/* Header styling */
+.main-header {
+    text-align: center;
+    padding: 1.5rem 0 1rem 0;
+    margin-bottom: 1.5rem;
+}
 
-# ------------------------------
-# Load Custom CSS
-# ------------------------------
-def load_css():
-    with open("style.css") as f:
-        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+.main-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    background: linear-gradient(120deg, #ffffff 0%, #a0a0a0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.3rem;
+}
 
-load_css()
+.subtitle {
+    color: #b0b0b0;
+    font-size: 1rem;
+    font-weight: 300;
+    margin: 0;
+}
 
-# ------------------------------
-# Load the trained model
-# ------------------------------
-@st.cache_resource
-def load_trained_model():
-    best_model_path = "dog_cat_model_best.h5"
-    return load_model(best_model_path)
+/* Upload placeholder */
+.upload-placeholder {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    margin: 1rem 0;
+    transition: all 0.3s ease;
+}
 
-model = load_trained_model()
+.upload-placeholder:hover {
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.08);
+}
 
-# ------------------------------
-# Initialize session state
-# ------------------------------
-if 'show_prediction' not in st.session_state:
-    st.session_state.show_prediction = False
-if 'uploaded_file' not in st.session_state:
-    st.session_state.uploaded_file = None
+.upload-text {
+    color: #b0b0b0;
+    font-size: 1.1rem;
+    margin: 0 0 0.3rem 0;
+}
 
-# ------------------------------
-# Header Section
-# ------------------------------
-st.markdown("""
-<div class="main-header">
-    <h1 class="main-title">🐾 AI Pet Classifier</h1>
-    <p class="subtitle">Upload an image to identify dogs or cats</p>
-</div>
-""", unsafe_allow_html=True)
+.upload-subtext {
+    font-size: 0.9rem;
+    margin: 0;
+    color: #808080;
+}
 
-# ------------------------------
-# Upload Section
-# ------------------------------
-# Only show file uploader if no file is uploaded
-if st.session_state.uploaded_file is None:
-    uploaded_file = st.file_uploader("", type=["jpg", "jpeg", "png"], label_visibility="collapsed", key="file_uploader")
-    
-    # Store uploaded file in session state
-    if uploaded_file is not None:
-        st.session_state.uploaded_file = uploaded_file
-        st.rerun()
+/* Image display - Fixed size container */
+.image-container-fixed {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 1rem;
+    margin: 1rem auto;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-# Show image and buttons after upload
-if st.session_state.uploaded_file is not None and not st.session_state.show_prediction:
-    # Display the uploaded image
-    img = Image.open(st.session_state.uploaded_file).convert('RGB')
-    
-    # Resize image to fixed size maintaining aspect ratio
-    img.thumbnail((350, 350), Image.Resampling.LANCZOS)
-    
-    # Display in fixed size container
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        st.markdown('<div class="image-container-fixed">', unsafe_allow_html=True)
-        st.image(img, width=350)
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Action buttons
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("✓ Predict", use_container_width=True, type="primary"):
-            st.session_state.show_prediction = True
-            st.rerun()
-    with col2:
-        if st.button("✕ Cancel", use_container_width=True):
-            # Clear session state
-            for key in list(st.session_state.keys()):
-                del st.session_state[key]
-            st.rerun()
+.image-container-fixed img {
+    border-radius: 10px;
+    display: block;
+}
 
-# Show prediction results
-elif st.session_state.uploaded_file is not None and st.session_state.show_prediction:
-    # Display the uploaded image
-    img = Image.open(st.session_state.uploaded_file).convert('RGB')
-    
-    # Resize image to fixed size maintaining aspect ratio
-    img.thumbnail((350, 350), Image.Resampling.LANCZOS)
-    
-    # Display in fixed size container
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        st.markdown('<div class="image-container-fixed">', unsafe_allow_html=True)
-        st.image(img, width=350)
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Preprocess image
-    img_resized = img.resize((128, 128))
-    x = image.img_to_array(img_resized) / 255.0
-    x = np.expand_dims(x, axis=0)
-    
-    # Prediction
-    pred = model.predict(x, verbose=0)
-    confidence = float(pred[0][0])
-    
-    if confidence > 0.5:
-        label = "Dog"
-        icon = "🐕"
-        confidence_percent = confidence * 100
-    else:
-        label = "Cat"
-        icon = "🐈"
-        confidence_percent = (1 - confidence) * 100
-    
-    # Display result
-    st.markdown(f"""
-    <div class="result-card">
-        <div class="result-icon">{icon}</div>
-        <p class="result-label">Classification Result</p>
-        <h2 class="result-value">{label}</h2>
-        <p class="confidence-text">Confidence: {confidence_percent:.1f}%</p>
-        <div class="confidence-bar">
-            <div class="confidence-fill" style="width: {confidence_percent}%;"></div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # New prediction button
-    col1, col2, col3 = st.columns([1, 1, 1])
-    with col2:
-        if st.button("↻ New Prediction", use_container_width=True):
-            # Clear all session state
-            for key in list(st.session_state.keys()):
-                del st.session_state[key]
-            st.rerun()
+/* Result card */
+.result-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    border-radius: 15px;
+    padding: 1.5rem;
+    text-align: center;
+    margin: 1rem 0;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
 
-# Show upload placeholder when no file
-elif st.session_state.uploaded_file is None:
-    st.markdown("""
-    <div class="upload-placeholder">
-        <p class="upload-text">📁 Drag and drop or click to upload</p>
-        <p class="upload-subtext">Supports JPG, JPEG, PNG</p>
-    </div>
-    """, unsafe_allow_html=True)
+.result-icon {
+    font-size: 4rem;
+    margin-bottom: 0.5rem;
+}
 
-# ------------------------------
-# Footer Section
-# ------------------------------
-st.markdown("""
-<div class="footer">
-    <p class="footer-text">Praveen De Silva | Machine Learning Project 01 | December 2024</p>
-</div>
-""", unsafe_allow_html=True)
+.result-label {
+    font-size: 1rem;
+    color: #a0a0a0;
+    margin-bottom: 0.3rem;
+}
+
+.result-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0.3rem 0;
+}
+
+.confidence-text {
+    color: #a0a0a0;
+    margin: 0.5rem 0;
+}
+
+.confidence-bar {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    height: 8px;
+    margin-top: 0.8rem;
+    overflow: hidden;
+}
+
+.confidence-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ffffff 0%, #808080 100%);
+    border-radius: 10px;
+    transition: width 0.5s ease;
+}
+
+/* Hide Streamlit branding */
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+header {visibility: hidden;}
+
+/* File uploader styling */
+.stFileUploader {
+    background: transparent !important;
+}
+
+.stFileUploader > div {
+    background: transparent !important;
+    border: none !important;
+}
+
+/* Button styling */
+.stButton > button {
+    background: linear-gradient(135deg, #ffffff 0%, #d0d0d0 100%);
+    color: #1a1a1a;
+    border: none;
+    border-radius: 12px;
+    padding: 0.65rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.stButton > button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(255, 255, 255, 0.3);
+}
+
+.stButton > button[kind="primary"] {
+    background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%);
+}
+
+/* Reduce overall spacing */
+.block-container {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+div[data-testid="stVerticalBlock"] > div {
+    gap: 0.5rem;
+}
+
+/* Footer styling */
+.footer {
+    margin-top: 3rem;
+    padding: 1.5rem 0;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-text {
+    color: #808080;
+    font-size: 0.9rem;
+    font-weight: 300;
+    margin: 0;
+    letter-spacing: 0.5px;
+}
