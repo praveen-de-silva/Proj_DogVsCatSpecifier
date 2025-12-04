@@ -61,19 +61,15 @@
     padding: 1rem;
     margin: 1rem auto;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    width: 100%;
-    max-width: 350px;
+    width: fit-content;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .image-container-fixed img {
-    width: 100%;
-    height: auto;
-    max-height: 100px;
-    object-fit: contain;
     border-radius: 10px;
+    display: block;
 }
 
 /* Result card */
