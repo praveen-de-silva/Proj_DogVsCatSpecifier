@@ -38,6 +38,8 @@ model = load_trained_model()
 # ------------------------------
 if 'show_prediction' not in st.session_state:
     st.session_state.show_prediction = False
+if 'uploaded_file' not in st.session_state:
+    st.session_state.uploaded_file = None
 
 # ------------------------------
 # Header Section
@@ -67,9 +69,9 @@ if st.session_state.uploaded_file is not None:
 
 if st.session_state.uploaded_file is not None and not st.session_state.show_prediction:
     # Display the uploaded image
-    img = Image.open(uploaded_file).convert('RGB')
+    img = Image.open(st.session_state.uploaded_file).convert('RGB')
     
-    st.markdown('<div class="image-container">', unsafe_allow_html=True)
+    st.markdown('<div class="image-container-fixed">', unsafe_allow_html=True)
     st.image(img, use_container_width=True)
     st.markdown('</div>', unsafe_allow_html=True)
     
@@ -82,13 +84,14 @@ if st.session_state.uploaded_file is not None and not st.session_state.show_pred
     with col2:
         if st.button("✕ Cancel", use_container_width=True):
             st.session_state.show_prediction = False
+            st.session_state.uploaded_file = None
             st.rerun()
 
-elif uploaded_file is not None and st.session_state.show_prediction:
+elif st.session_state.uploaded_file is not None and st.session_state.show_prediction:
     # Display the uploaded image
-    img = Image.open(uploaded_file).convert('RGB')
+    img = Image.open(st.session_state.uploaded_file).convert('RGB')
     
-    st.markdown('<div class="image-container">', unsafe_allow_html=True)
+    st.markdown('<div class="image-container-fixed">', unsafe_allow_html=True)
     st.image(img, use_container_width=True)
     st.markdown('</div>', unsafe_allow_html=True)
     
@@ -128,6 +131,7 @@ elif uploaded_file is not None and st.session_state.show_prediction:
     with col2:
         if st.button("↻ New Prediction", use_container_width=True):
             st.session_state.show_prediction = False
+            st.session_state.uploaded_file = None
             st.rerun()
 else:
     st.markdown("""
