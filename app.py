@@ -10,7 +10,7 @@ import os
 # ------------------------------
 # Load the trained model
 # ------------------------------
-best_model_path = r"C:\Users\ASUS\Desktop\DogCatSpecifier\dog_cat_model_best.h5"  # update this path
+best_model_path = "dog_cat_model_best.h5"  # update this path
 model = load_model(best_model_path)
 
 # ------------------------------
