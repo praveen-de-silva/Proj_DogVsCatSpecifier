@@ -1,0 +1,159 @@
+/* Main background */
+.stApp {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+}
+
+/* Header styling */
+.main-header {
+    text-align: center;
+    padding: 1.5rem 0 1rem 0;
+    margin-bottom: 1.5rem;
+}
+
+.main-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    background: linear-gradient(120deg, #ffffff 0%, #a0a0a0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.3rem;
+}
+
+.subtitle {
+    color: #b0b0b0;
+    font-size: 1rem;
+    font-weight: 300;
+    margin: 0;
+}
+
+/* Upload placeholder */
+.upload-placeholder {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    margin: 1rem 0;
+    transition: all 0.3s ease;
+}
+
+.upload-placeholder:hover {
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.upload-text {
+    color: #b0b0b0;
+    font-size: 1.1rem;
+    margin: 0 0 0.3rem 0;
+}
+
+.upload-subtext {
+    font-size: 0.9rem;
+    margin: 0;
+    color: #808080;
+}
+
+/* Image display */
+.image-container {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 1rem;
+    margin: 1rem 0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Result card */
+.result-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    border-radius: 15px;
+    padding: 1.5rem;
+    text-align: center;
+    margin: 1rem 0;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.result-icon {
+    font-size: 4rem;
+    margin-bottom: 0.5rem;
+}
+
+.result-label {
+    font-size: 1rem;
+    color: #a0a0a0;
+    margin-bottom: 0.3rem;
+}
+
+.result-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0.3rem 0;
+}
+
+.confidence-text {
+    color: #a0a0a0;
+    margin: 0.5rem 0;
+}
+
+.confidence-bar {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    height: 8px;
+    margin-top: 0.8rem;
+    overflow: hidden;
+}
+
+.confidence-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ffffff 0%, #808080 100%);
+    border-radius: 10px;
+    transition: width 0.5s ease;
+}
+
+/* Hide Streamlit branding */
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+header {visibility: hidden;}
+
+/* File uploader styling */
+.stFileUploader {
+    background: transparent !important;
+}
+
+.stFileUploader > div {
+    background: transparent !important;
+    border: none !important;
+}
+
+/* Button styling */
+.stButton > button {
+    background: linear-gradient(135deg, #ffffff 0%, #d0d0d0 100%);
+    color: #1a1a1a;
+    border: none;
+    border-radius: 12px;
+    padding: 0.65rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.stButton > button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(255, 255, 255, 0.3);
+}
+
+.stButton > button[kind="primary"] {
+    background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%);
+}
+
+/* Reduce overall spacing */
+.block-container {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+div[data-testid="stVerticalBlock"] > div {
+    gap: 0.5rem;
+}
