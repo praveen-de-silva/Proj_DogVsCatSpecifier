@@ -1,4 +1,4 @@
-"# 🐾 AI Pet Classifier - Dog vs Cat Specifier
+# 🐾 AI Pet Classifier - Dog vs Cat Specifier
 
 An intelligent image classification application that uses deep learning to identify whether an uploaded image contains a dog or a cat. Built with TensorFlow/Keras and deployed using Streamlit.
 
@@ -130,4 +130,4 @@ This project is open source and available for educational purposes.
 - Dataset provided by [Kaggle Dogs vs Cats Competition](https://www.kaggle.com/competitions/dogs-vs-cats/data)
 - Built with Streamlit and TensorFlow
 - Trained on Google Colab infrastructure
-" 
+
