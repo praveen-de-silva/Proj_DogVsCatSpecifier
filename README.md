@@ -2,6 +2,56 @@
 
 An intelligent image classification application that uses deep learning to identify whether an uploaded image contains a dog or a cat. Built with TensorFlow/Keras and deployed using Streamlit.
 
+## 🧠 Theoretical Background
+
+This application solves a **binary image classification** problem, determining whether an uploaded image contains a **dog** or a **cat**. The model is built using a **Convolutional Neural Network (CNN)**, which learns visual patterns such as edges, shapes, fur textures, and facial features.
+
+During training, the CNN sees many images from both classes. For each image:
+
+1. Predicts a label  
+2. Compares with the correct label  
+3. Adjusts weights via **backpropagation** and **gradient descent**  
+
+Over thousands of images, the model learns the visual differences between dogs and cats.
+
+### Model Architecture
+- **Convolution Layers**: extract edges and small patterns  
+- **Pooling Layers**: reduce spatial size while keeping important info  
+- **Flatten Layer**: converts features to a vector  
+- **Dense Layers**: final decision-making  
+- **Output Layer**: produces probability (0-1)  
+
+**Interpretation:**  
+```
+Closer to 1 → Dog  
+Closer to 0 → Cat
+```
+
+---
+
+## 🔮 How Prediction Works
+
+1. User uploads an image  
+2. Image is resized to **128×128**  
+3. Pixel values normalized to **0-1**  
+4. Image passed through **CNN model**  
+5. Model outputs a **probability score**  
+6. App classifies:  
+```
+> 0.5 → Dog  
+< 0.5 → Cat
+```
+
+### Example
+```
+Prediction = 0.87 → 87% confidence → Dog  
+Prediction = 0.12 → 12% confidence → Cat
+```
+
+This allows **real-time image classification**.
+
+---
+
 ## 📊 Data Dictionary
 
 ### Dataset Source
