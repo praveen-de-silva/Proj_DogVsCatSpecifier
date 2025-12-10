@@ -2,6 +2,8 @@
 
 An intelligent image classification application that uses deep learning to identify whether an uploaded image contains a dog or a cat. Built with TensorFlow/Keras and deployed using Streamlit.
 
+---
+
 ## 🧠 Theoretical Background
 
 This application solves a **binary image classification** problem, determining whether an uploaded image contains a **dog** or a **cat**. The model is built using a **Convolutional Neural Network (CNN)**, which learns visual patterns such as edges, shapes, fur textures, and facial features.
@@ -26,8 +28,6 @@ Over thousands of images, the model learns the visual differences between dogs a
 Closer to 1 → Dog  
 Closer to 0 → Cat
 ```
-
----
 
 ## 🔮 How Prediction Works
 
@@ -76,6 +76,8 @@ This allows **real-time image classification**.
 - **Color Format**: RGB (Red, Green, Blue)
 - **Data Augmentation**: Applied during training (rotation, flip, zoom)
 
+---
+
 ## 🛠️ Technical Stack
 
 ### Machine Learning & Data Science
@@ -105,6 +107,8 @@ This allows **real-time image classification**.
 - **VS Code**: Code editor
 - **Virtual Environment**: Python dependency isolation
 
+---
+
 ## 🚀 Features
 
 - **Real-time Image Classification**: Upload and classify images instantly
@@ -112,6 +116,8 @@ This allows **real-time image classification**.
 - **Error Handling**: Robust validation with user-friendly error messages
 - **Interactive UI**: Modern, gradient-based dark theme design
 - **Responsive Layout**: Optimized for various screen sizes
+
+---
 
 ## 📦 Installation
 
@@ -164,6 +170,8 @@ DogCatSpecifier/
 ├── requirements.txt          # Python dependencies
 └── README.md                 # Project documentation
 ```
+
+---
 
 ## 👤 Author
 
